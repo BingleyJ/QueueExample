@@ -1,31 +1,18 @@
 import java.util.Random;
 
-/*	John Bingley - Queue Homework
- *  Data Structures - Lonnie Bowe
- *  
- *  Down and dirty Queue assignment. No bells, no whistles.
- * 
- * Play with customizable variables for all types of scenarios
- * 
- * I already see some serious refactoring that could be done
- * 1) update function could do a lot more to lower overhead as a whole
- * 2) With more time, a gui would be nicer.
- */
-
-
-
 public class StoreQueueExample {
 	//-----------customizable variables-----------------------------------------------|
 	private static int runtime = 120; //fake minutes			
 	private static int totalQueues = 1; //total lines
 	private static int totalCashiers = 1; //total cashiers
-	private static int totalPossibleItemsInBasket = 4; //for added wait times
+	private static int totalPossibleItemsInBasket = 0; //for added wait times
 	private static int maxPossibleCustomersAddedPerMinute = 2; //people entering line
 	//--------------------------------------------------------------------------------|
 	private static line[] lines;
 	private static int customersServed = 0;
 	private static int originalRuntime = runtime;
 	private static int maxWaitTime = 0;
+	//private static int waitTimeServed = 0;
 	private static int totalWaitTime = 0;
 	
 	public static void main(String[] args) {
@@ -42,9 +29,9 @@ public class StoreQueueExample {
 			//add customers to shortest lines
 			for (int i = 0; i < newCustomers; i++) {
 				int templine = checkForShortestLine();
-				lines[templine].addCustomers(1, totalPossibleItemsInBasket);
+				lines[templine].addCustomers(1, randInt(0, totalPossibleItemsInBasket));
 			}
-			//add minute of wait time to everyone in line.
+			//add wait time to everyone in line.
 			for(int i = 0; i < totalQueues; i++){
 				lines[i].update();
 			}
@@ -55,10 +42,15 @@ public class StoreQueueExample {
 				maxWaitTime = lines[i].checkForRecordWaitTime(maxWaitTime);
 			}
 			//kill customers based on amount of cashiers.
+			//there is a bug in this logic
+			int cashiercount = totalCashiers;
 			for(int i = 0; i < totalQueues; i++){
-				lines[i].serviceNextCustomer(totalCashiers);
+				if (cashiercount > 0){
+					if(lines[i].serviceNextCustomer())
+						customersServed++;
+					cashiercount--;				}
 			}
-			customersServed += totalCashiers;
+			//customersServed += totalCashiers;
 			runtime--;
 		}	
 		System.out.println("---------------------------------------");

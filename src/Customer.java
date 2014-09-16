@@ -16,5 +16,15 @@ public class Customer {
 	public void addMinuteWaitTime() {
 		this.waitTime++;
 	}
+	
+	public void killitem(){
+		itemsInBasket--;
+	}
+	
+	public boolean basketisempty(){
+		if (itemsInBasket > 0)
+			return false;
+		else return true;
+	}
 
 }

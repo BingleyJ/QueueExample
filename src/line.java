@@ -16,16 +16,24 @@ public class line {
 		}
 	}
 
-
-	public void serviceNextCustomer(int totalCashiersIn){
-		//kill next customer
-		if (!lineOfCustomers.isEmpty()){
-			for (int i = 0; i < totalCashiersIn; i++){
-				if (!lineOfCustomers.isEmpty())
-					lineOfCustomers.remove(0);
+	
+	//checks items, deletes items, returns true if customer was done transaction.
+	public boolean serviceNextCustomer() {
+		// kill next customer
+		if (!lineOfCustomers.isEmpty()) {
+			Customer customer = lineOfCustomers.get(0);
+			if (customer.basketisempty()){
+				lineOfCustomers.remove(0);
+				return true;
+			}
+			else{
+				customer.killitem();
+				return false;
 			}
 		}
+		return false;
 	}
+		
 	
 	public void update() {
 		//add wait time to each customer in line
